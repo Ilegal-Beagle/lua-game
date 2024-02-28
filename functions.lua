@@ -31,18 +31,41 @@ function ItemCheck(item, player)
   if player.x > item.x and player.x < (item.x + 50) and 
      player.y > item.y and player.y < (item.y + 50) then
     if not item.is_collected then
-      table.insert(inventory, item)
+      table.insert(player.inventory, item)
       item.is_collected = true
     end
   end
 end
   
+-- checks if player is at edge of camera view
+-- if so, it will bring the player past the camera's view
+-- and move the camera to place the player goes
+function AtEdge(player, bg1, bg2)
+  local window_x_max = 770
+  local window_x_min = 30
+  if player.x >= window_x_max then
+    -- move player out of window
+    player.x = 30
+    -- then, move window and player so next tile is in frame
+    bg1.x = bg1.x - 800
+    bg2.x = bg2.x - 800
+    
+  elseif player.x <= window_x_min then
+    -- move player out of window
+    player.x = 770
+    bg1.x = bg1.x + 800
+    bg2.x = bg2.x + 800
+    
+  end
+end
   
+-- rounds a number
 function round(num, place)
   local multi = 10^(place or 0)
   return math.floor(num * multi + .5) / multi
 end
 
+-- dumps table to a string
 function dump(o)
    if type(o) == 'table' then
       local s = ''
@@ -55,6 +78,7 @@ function dump(o)
    end
 end
 
+-- draws an image
 function DrawItem(item)
   local offset = 25
   local r = 0 ;local g = 0;local b = 0
