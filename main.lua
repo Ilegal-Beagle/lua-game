@@ -4,9 +4,19 @@ require "functions"
 function love.load()
   
   player = {
-    x     = 400,
-    y     = 400,
-    speed = 100,
+    x  = {
+      pos = 400,
+      vel = 0,
+      acc = 0
+    },
+
+    y = {
+      pos = 400,
+      vel = 0,
+      acc = 0
+    },
+
+    friction  = .9,
     inventory = {}
   }
 
@@ -27,7 +37,7 @@ function love.load()
   io.stdout:setvbuf("no")
   
   background  = love.graphics.newImage("background.png")
-  background2 = love.graphics.newImage("background2.png")
+  background2 = love.graphics.newImage("background.png")
   
 end
 
@@ -60,8 +70,9 @@ function love.draw()
   
   
   -- draws player coords and player inventory
-  love.graphics.print(tostring(round(player.x)).." "..tostring(round(player.y)), 10)
-  love.graphics.print("Inventory: "..dump(player.inventory), 10, 20)
+  love.graphics.print(tostring(round(player.x.pos)).." "..tostring(round(player.y.pos)), 10)
+  love.graphics.print(tostring(round(player.x.vel)).." "..tostring(round(player.y.vel)), 10, 20)
+  love.graphics.print("Inventory: "..dump(player.inventory), 10, 30)
   
 end
 

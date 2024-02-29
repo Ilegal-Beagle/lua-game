@@ -1,35 +1,59 @@
 
 function DrawPlayer(player)
   local player_sprite = love.graphics.newImage("Player.png")
-  love.graphics.draw(player_sprite, player.x, player.y, 0, .5, .5)
+  love.graphics.draw(player_sprite, player.x.pos, player.y.pos, 0, .5, .5)
 end
 
 function PlayerMovement(player, dt)
+  local CONST_ACCEL = 20
+  local CONST_MAX_VELOCITY = 150
   
+                -- INPUTS --
   if love.keyboard.isDown("right") then
-    player.x = player.x + player.speed*dt
+    player.x.acc = player.x.acc + CONST_ACCEL*dt*player.friction
   end
     
   if love.keyboard.isDown("left") then
-    player.x = player.x - player.speed*dt
+    player.x.acc = player.x.acc - CONST_ACCEL*dt*player.friction
   end
     
   if love.keyboard.isDown("down") then
-    player.y = player.y + player.speed*dt
+    player.y.acc = player.y.acc - CONST_ACCEL*dt*player.friction
   end
   
   if love.keyboard.isDown("up") then
-    player.y = player.y - player.speed*dt
+    player.y.acc = player.y.acc - CONST_ACCEL*dt*player.friction
   end
+
+
+  -- THINGS THAT CHANGE HOW MOVEMENT FEELS? --
+  if player.x.vel < CONST_MAX_VELOCITY or  
+     player.y.vel > CONST_MAX_VELOCITY then
+    UpdateVelocity(player, dt)
+  end
+
+
+
+  UpdatePosition(player, dt)
   
 end
-  
+
+function UpdateVelocity(player, dt)
+  player.x.vel = player.x.vel + player.x.acc*dt
+  player.y.vel = player.y.vel + player.y.acc*dt 
+end
+
+function UpdatePosition(player, dt)
+  player.x.pos = player.x.pos + player.x.vel * dt
+  player.y.pos = player.y.pos + player.y.vel * dt
+end
+
 -- Checks if item has been touched by player
 -- If item is collected, remmoves it from field
 -- and added to player inventory
 function ItemCheck(item, player)
-  if player.x > item.x and player.x < (item.x + 50) and 
-     player.y > item.y and player.y < (item.y + 50) then
+  if player.x.pos > item.x and player.x.pos < (item.x + 50) and 
+     player.y.pos > item.y and player.y.pos < (item.y + 50) then
     if not item.is_collected then
       table.insert(player.inventory, item)
       item.is_collected = true
@@ -43,16 +67,16 @@ end
 function AtEdge(player, bg1, bg2)
   local window_x_max = 770
   local window_x_min = 30
-  if player.x >= window_x_max then
+  if player.x.pos >= window_x_max then
     -- move player out of window
-    player.x = 30
+    player.x.pos = 30
     -- then, move window and player so next tile is in frame
     bg1.x = bg1.x - 800
     bg2.x = bg2.x - 800
     
-  elseif player.x <= window_x_min then
+  elseif player.x.pos <= window_x_min then
     -- move player out of window
-    player.x = 770
+    player.x.pos = 770
     bg1.x = bg1.x + 800
     bg2.x = bg2.x + 800
     
