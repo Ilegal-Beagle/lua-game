@@ -5,31 +5,32 @@ function DrawPlayer(player)
 end
 
 function PlayerMovement(player, dt)
-  local CONST_ACCEL = 20
+  local CONST_ACCEL = 500
   local CONST_MAX_VELOCITY = 150
-  
+
                 -- INPUTS --
   if love.keyboard.isDown("right") then
-    player.x.acc = player.x.acc + CONST_ACCEL*dt*player.friction
+    player.x.vel = player.x.vel + CONST_ACCEL*dt*player.friction
+  elseif player.x.vel > 0 then
+    player.x.vel = player.x.vel - CONST_ACCEL*dt*player.friction
   end
     
   if love.keyboard.isDown("left") then
-    player.x.acc = player.x.acc - CONST_ACCEL*dt*player.friction
+    player.x.vel = player.x.vel - CONST_ACCEL*dt*player.friction
+  elseif player.x.vel < 0 then
+    player.x.vel = player.x.vel + CONST_ACCEL*dt*player.friction
   end
     
   if love.keyboard.isDown("down") then
-    player.y.acc = player.y.acc - CONST_ACCEL*dt*player.friction
+    player.y.vel = player.y.vel + CONST_ACCEL*dt*player.friction
+  elseif player.y.vel > 0 then
+    player.y.vel = player.y.vel - CONST_ACCEL*dt*player.friction
   end
   
   if love.keyboard.isDown("up") then
-    player.y.acc = player.y.acc - CONST_ACCEL*dt*player.friction
-  end
-
-
-  -- THINGS THAT CHANGE HOW MOVEMENT FEELS? --
-  if player.x.vel < CONST_MAX_VELOCITY or  
-     player.y.vel > CONST_MAX_VELOCITY then
-    UpdateVelocity(player, dt)
+    player.y.vel = player.y.vel - CONST_ACCEL*dt*player.friction
+  elseif player.y.vel < 0 then
+    player.y.vel = player.y.vel + CONST_ACCEL*dt*player.friction
   end
 
 
