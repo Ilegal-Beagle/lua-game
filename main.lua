@@ -1,26 +1,12 @@
 
 require "functions"
+require "misc-functions"
 
 function love.load()
   
-  player = {
-    x  = {
-      pos = 400,
-      vel = 0,
-      acc = 0
-    },
+  player = InitilizePlayer()
 
-    y = {
-      pos = 400,
-      vel = 0,
-      acc = 0
-    },
-
-    friction  = .9,
-    inventory = {}
-  }
-
-  -- TESTING STUFF HERE
+  -- Move this into an init background function
   bg_prop  = {}
   bg2_prop = {}
   bg_prop.x, bg_prop.y = 0
@@ -44,8 +30,8 @@ end
 -- dt is delta time, this makes the movement same on all computers
 function love.update(dt)
   
-  PlayerMovement(player, dt)
-  
+  MovePlayer(player, dt)
+
   AtEdge(player, bg_prop, bg2_prop)
   
   for i, _ in pairs(avaliable_items) do
@@ -68,10 +54,7 @@ function love.draw()
 
   DrawPlayer(player)
   
-  
-  -- draws player coords and player inventory
-  love.graphics.print(tostring(round(player.x.pos)).." "..tostring(round(player.y.pos)), 10)
-  love.graphics.print(tostring(round(player.x.vel)).." "..tostring(round(player.y.vel)), 10, 20)
+  Draw.Coordinates(player, 10, 0)  
   love.graphics.print("Inventory: "..dump(player.inventory), 10, 30)
   
 end

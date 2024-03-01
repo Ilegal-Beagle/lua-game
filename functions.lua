@@ -1,42 +1,70 @@
 
-function DrawPlayer(player)
-  local player_sprite = love.graphics.newImage("Player.png")
-  love.graphics.draw(player_sprite, player.x.pos, player.y.pos, 0, .5, .5)
+function InitilizePlayer()
+  local to_return = 
+  {
+    x  = { pos = 400, vel = 0, acc = 0},
+    y = { pos = 400, vel = 0, acc = 0},
+
+    friction  = .9,
+    acceleration = 200,
+    max_velocity = 200,
+    inventory = {}
+  }
+
+  return to_return
 end
 
-function PlayerMovement(player, dt)
-  local CONST_ACCEL = 500
-  local CONST_MAX_VELOCITY = 150
+function MovePlayer(player, dt)
+  PlayerMovement(player, dt)
+  UpdateVelocity(player, dt)
+  UpdatePosition(player, dt)
+end
 
-                -- INPUTS --
+
+-- The next three functions PlayerMovement,
+-- UpdateVelocity, and UpdatePosition are all
+-- helper functions for MovePlayer
+function PlayerMovement(player, dt)
+  
+  -- handles key presses
+  -- if key is pressed, move that way
+  -- otherwise, slow the character down
   if love.keyboard.isDown("right") then
-    player.x.vel = player.x.vel + CONST_ACCEL*dt*player.friction
+    player.x.vel = player.x.vel + player.acceleration*dt*player.friction
   elseif player.x.vel > 0 then
-    player.x.vel = player.x.vel - CONST_ACCEL*dt*player.friction
+    player.x.vel = player.x.vel - player.acceleration*dt*player.friction
   end
     
   if love.keyboard.isDown("left") then
-    player.x.vel = player.x.vel - CONST_ACCEL*dt*player.friction
+    player.x.vel = player.x.vel - player.acceleration*dt*player.friction
   elseif player.x.vel < 0 then
-    player.x.vel = player.x.vel + CONST_ACCEL*dt*player.friction
+    player.x.vel = player.x.vel + player.acceleration*dt*player.friction
   end
     
   if love.keyboard.isDown("down") then
-    player.y.vel = player.y.vel + CONST_ACCEL*dt*player.friction
+    player.y.vel = player.y.vel + player.acceleration*dt*player.friction
   elseif player.y.vel > 0 then
-    player.y.vel = player.y.vel - CONST_ACCEL*dt*player.friction
+    player.y.vel = player.y.vel - player.acceleration*dt*player.friction
   end
   
   if love.keyboard.isDown("up") then
-    player.y.vel = player.y.vel - CONST_ACCEL*dt*player.friction
+    player.y.vel = player.y.vel - player.acceleration*dt*player.friction
   elseif player.y.vel < 0 then
-    player.y.vel = player.y.vel + CONST_ACCEL*dt*player.friction
+    player.y.vel = player.y.vel + player.acceleration*dt*player.friction
   end
 
+  -- This is like to make sure that when no keys are pressed,
+  -- the playing wont drift around
+  if player.x.vel < 5 and player.x.vel > -5 and
+     not love.keyboard.isDown("left") and not love.keyboard.isDown("right") then
+    player.x.vel = 0
+  end 
 
+  if player.y.vel < 5 and player.y.vel > -5 and 
+     not love.keyboard.isDown("up") and not love.keyboard.isDown("down") then
+    player.y.vel = 0
+  end
 
-  UpdatePosition(player, dt)
-  
 end
 
 function UpdateVelocity(player, dt)
@@ -83,25 +111,6 @@ function AtEdge(player, bg1, bg2)
     
   end
 end
-  
--- rounds a number
-function round(num, place)
-  local multi = 10^(place or 0)
-  return math.floor(num * multi + .5) / multi
-end
-
--- dumps table to a string
-function dump(o)
-   if type(o) == 'table' then
-      local s = ''
-      for k,v in pairs(o) do
-        s = s .. v.name .. ' '
-      end
-      return s
-   else
-      return tostring(o)
-   end
-end
 
 -- draws an image
 function DrawItem(item)
@@ -114,4 +123,20 @@ function DrawItem(item)
   end
 
   love.graphics.draw(image, item.x, item.y, 0, .3, .3)
+end
+
+function DrawPlayer(player)
+  local player_sprite = love.graphics.newImage("Player.png")
+  love.graphics.draw(player_sprite, player.x.pos, player.y.pos, 0, .5, .5)
+end
+
+-- the second and third argument is for the x and y position
+Draw = {}
+
+function Draw:Coordinates(player, x, y)
+  love.graphics.print(tostring(round(player.x.pos)).." "..tostring(round(player.y.pos)), x, y)
+end
+
+function Draw:Velocity(player, x, y)
+  love.graphics.print(tostring(round(player.x.vel)).." "..tostring(round(player.y.vel)), x, y)
 end
