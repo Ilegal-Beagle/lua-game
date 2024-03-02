@@ -5,9 +5,11 @@ function InitilizePlayer()
     x  = { pos = 400, vel = 0, acc = 0},
     y = { pos = 400, vel = 0, acc = 0},
 
-    friction  = .9,
-    acceleration = 200,
-    max_velocity = 200,
+    friction  = .3,
+    starting_acceleration = 500,
+    stopping_acceleration = 700,
+    max_velocity = 100,
+    hitbox = 0,
     inventory = {}
   }
 
@@ -20,48 +22,70 @@ function MovePlayer(player, dt)
   UpdatePosition(player, dt)
 end
 
-
 -- The next three functions PlayerMovement,
 -- UpdateVelocity, and UpdatePosition are all
 -- helper functions for MovePlayer
 function PlayerMovement(player, dt)
   
-  -- handles key presses
-  -- if key is pressed, move that way
-  -- otherwise, slow the character down
   if love.keyboard.isDown("right") then
-    player.x.vel = player.x.vel + player.acceleration*dt*player.friction
+    player.x.vel = player.x.vel + 
+                   player.starting_acceleration*dt*player.friction
   elseif player.x.vel > 0 then
-    player.x.vel = player.x.vel - player.acceleration*dt*player.friction
+    player.x.vel = player.x.vel - 
+                   player.stopping_acceleration*dt*player.friction
   end
     
   if love.keyboard.isDown("left") then
-    player.x.vel = player.x.vel - player.acceleration*dt*player.friction
+    player.x.vel = player.x.vel - 
+                   player.starting_acceleration*dt*player.friction
   elseif player.x.vel < 0 then
-    player.x.vel = player.x.vel + player.acceleration*dt*player.friction
+    player.x.vel = player.x.vel + 
+                   player.stopping_acceleration*dt*player.friction
   end
     
   if love.keyboard.isDown("down") then
-    player.y.vel = player.y.vel + player.acceleration*dt*player.friction
+    player.y.vel = player.y.vel + 
+                   player.starting_acceleration*dt*player.friction
   elseif player.y.vel > 0 then
-    player.y.vel = player.y.vel - player.acceleration*dt*player.friction
+    player.y.vel = player.y.vel - 
+                   player.stopping_acceleration*dt*player.friction
   end
   
   if love.keyboard.isDown("up") then
-    player.y.vel = player.y.vel - player.acceleration*dt*player.friction
+    player.y.vel = player.y.vel - 
+                   player.starting_acceleration*dt*player.friction
   elseif player.y.vel < 0 then
-    player.y.vel = player.y.vel + player.acceleration*dt*player.friction
+    player.y.vel = player.y.vel + 
+                   player.stopping_acceleration*dt*player.friction
+  end
+
+  if player.x.vel > player.max_velocity then
+    player.x.vel = player.max_velocity
+  end
+
+  if player.x.vel < -player.max_velocity then
+    player.x.vel = -player.max_velocity
+  end
+
+  if player.y.vel > player.max_velocity then
+    player.y.vel = player.max_velocity
+  end
+
+  if player.y.vel < -player.max_velocity then
+    player.y.vel = -player.max_velocity
   end
 
   -- This is like to make sure that when no keys are pressed,
   -- the playing wont drift around
   if player.x.vel < 5 and player.x.vel > -5 and
-     not love.keyboard.isDown("left") and not love.keyboard.isDown("right") then
+     not love.keyboard.isDown("left") and 
+     not love.keyboard.isDown("right") then
     player.x.vel = 0
   end 
 
   if player.y.vel < 5 and player.y.vel > -5 and 
-     not love.keyboard.isDown("up") and not love.keyboard.isDown("down") then
+     not love.keyboard.isDown("up") and 
+     not love.keyboard.isDown("down") then
     player.y.vel = 0
   end
 
@@ -93,21 +117,19 @@ end
 -- checks if player is at edge of camera view
 -- if so, it will bring the player past the camera's view
 -- and move the camera to place the player goes
-function AtEdge(player, bg1, bg2)
+function AtEdge(player, map)
   local window_x_max = 770
   local window_x_min = 30
   if player.x.pos >= window_x_max then
     -- move player out of window
     player.x.pos = 30
     -- then, move window and player so next tile is in frame
-    bg1.x = bg1.x - 800
-    bg2.x = bg2.x - 800
+    map.bg_prop.x = map.bg_prop.x - 800
     
   elseif player.x.pos <= window_x_min then
     -- move player out of window
     player.x.pos = 770
-    bg1.x = bg1.x + 800
-    bg2.x = bg2.x + 800
+    map.bg_prop.x = map.bg_prop.x + 800
     
   end
 end
@@ -131,12 +153,21 @@ function DrawPlayer(player)
 end
 
 -- the second and third argument is for the x and y position
+
 Draw = {}
 
-function Draw:Coordinates(player, x, y)
+function Draw.Coordinates(player, x, y)
   love.graphics.print(tostring(round(player.x.pos)).." "..tostring(round(player.y.pos)), x, y)
 end
 
-function Draw:Velocity(player, x, y)
+function Draw.Velocity(player, x, y)
   love.graphics.print(tostring(round(player.x.vel)).." "..tostring(round(player.y.vel)), x, y)
+end
+
+function Draw.Inventory(player, x, y)
+  love.graphics.print("Inventory: ".. dump(player.inventory), 10, 30)
+end
+
+function Draw.Map(map)
+  love.graphics.draw(map.background, map.bg_prop.x, map.bg_prop.y)
 end

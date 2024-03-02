@@ -2,7 +2,7 @@
 function round(num, place)
     local multi = 10^(place or 0)
     return math.floor(num * multi + .5) / multi
-  end
+end
   
 -- dumps table to a string
 function dump(o)
