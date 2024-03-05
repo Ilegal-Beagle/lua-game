@@ -6,17 +6,8 @@ function love.load()
   
   player = InitilizePlayer()
   
-  map = {
-    background  = love.graphics.newImage("background.png"),
-    bg_prop  = { x=0, y=0 },
-    avaliable_items = {
-      {name = "Apple",  x = 100, y = 100, is_collected = false},
-      {name = "Banana", x = 200, y = 200, is_collected = false},
-      {name = "Orange", x = 300, y = 300, is_collected = false},
-      {name = "Pear",   x = 400, y = 400, is_collected = false}
-    }
-  }
-  
+  map = LoadArea()
+
   io.stdout:setvbuf("no")
   
 end
@@ -28,8 +19,8 @@ function love.update(dt)
 
   AtEdge(player, map)
   
-  for i, _ in pairs(map.avaliable_items) do
-    ItemCheck(map.avaliable_items[i], player)
+  for i, _ in pairs(map.items) do
+    ItemCheck(map.items[i], player)
   end
 end
 
@@ -38,11 +29,11 @@ function love.draw()
   Draw.Map(map)
   
   -- prints collectable items
-  for i, _ in pairs(map.avaliable_items) do
-    DrawItem(map.avaliable_items[i])
+  for i, _ in pairs(map.items) do
+    Draw.Item(map.items[i])
   end
   
-  DrawPlayer(player)
+  Draw.Player(player)
   
   Draw.Coordinates(player, 10, 0)
   Draw.Velocity(player, 10, 15)

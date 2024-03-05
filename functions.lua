@@ -1,4 +1,39 @@
 
+-- functions to load from file
+
+function LoadArea()
+
+  area = {}
+
+  -- function used inside area.lua
+  function CreateArea(b)
+    area.background = b.background
+    area.items = b.items
+  end
+  
+  -- loads and executes area.lua
+  dofile("area.lua")
+
+  --printing out the map information
+  print(area.background)
+  area.background = love.graphics.newImage(area.background)
+
+  for _, item in ipairs(area.items) do
+    print(item.name, item.image, item.x, item.y)
+    area.items[_].name  = item.name
+    area.items[_].image = item.image
+    area.items[_].x     = item.x
+    area.items[_].y     = item.y
+  end
+
+  return area
+  
+end
+
+
+
+-- Initilization functions
+
 function InitilizePlayer()
   local to_return = 
   {
@@ -16,15 +51,14 @@ function InitilizePlayer()
   return to_return
 end
 
+-- manages the movement of the player
+
 function MovePlayer(player, dt)
   PlayerMovement(player, dt)
   UpdateVelocity(player, dt)
   UpdatePosition(player, dt)
 end
 
--- The next three functions PlayerMovement,
--- UpdateVelocity, and UpdatePosition are all
--- helper functions for MovePlayer
 function PlayerMovement(player, dt)
   
   if love.keyboard.isDown("right") then
@@ -59,6 +93,8 @@ function PlayerMovement(player, dt)
                    player.stopping_acceleration*dt*player.friction
   end
 
+  -- this doesnt let the player go too fast
+
   if player.x.vel > player.max_velocity then
     player.x.vel = player.max_velocity
   end
@@ -75,7 +111,7 @@ function PlayerMovement(player, dt)
     player.y.vel = -player.max_velocity
   end
 
-  -- This is like to make sure that when no keys are pressed,
+  -- This is to make sure that when no keys are pressed,
   -- the playing wont drift around
   if player.x.vel < 5 and player.x.vel > -5 and
      not love.keyboard.isDown("left") and 
@@ -134,27 +170,24 @@ function AtEdge(player, map)
   end
 end
 
--- draws an image
-function DrawItem(item)
+
+Draw = {}
+
+function Draw.Item(item)
   local offset = 25
   local r = 0 ;local g = 0;local b = 0
-  image = love.graphics.newImage(item.name..".png")
+  image = love.graphics.newImage(item.image)
   
-  if item.is_collected then
-    return
+  if not item.is_collected then
+    love.graphics.draw(image, item.x, item.y, 0, .3, .3)
   end
 
-  love.graphics.draw(image, item.x, item.y, 0, .3, .3)
 end
 
-function DrawPlayer(player)
+function Draw.Player(player)
   local player_sprite = love.graphics.newImage("Player.png")
   love.graphics.draw(player_sprite, player.x.pos, player.y.pos, 0, .5, .5)
 end
-
--- the second and third argument is for the x and y position
-
-Draw = {}
 
 function Draw.Coordinates(player, x, y)
   love.graphics.print(tostring(round(player.x.pos)).." "..tostring(round(player.y.pos)), x, y)
@@ -169,5 +202,5 @@ function Draw.Inventory(player, x, y)
 end
 
 function Draw.Map(map)
-  love.graphics.draw(map.background, map.bg_prop.x, map.bg_prop.y)
+  love.graphics.draw(map.background, 0, 0)
 end
