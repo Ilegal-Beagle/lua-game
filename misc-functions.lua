@@ -1,5 +1,5 @@
 -- misc-functions.lua
--- various useful functions go here 
+-- various useful functions go here
 
 -- rounds a number
 function round(num, place)
