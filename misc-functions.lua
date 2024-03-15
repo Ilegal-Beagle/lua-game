@@ -1,3 +1,6 @@
+-- misc-functions.lua
+-- various useful functions go here 
+
 -- rounds a number
 function round(num, place)
     local multi = 10^(place or 0)
