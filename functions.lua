@@ -48,11 +48,14 @@ function LoadArea(specified_area)
   return area
 end
 
-function LoadPlayer()
+function LoadPlayer(specified_area)
   local player = {}
 
   function CreatePlayer(b)
     player = b
+    if specified_area then
+      player.current_area = specified_area
+    end
   end
 
   dofile("player.lua")
@@ -60,20 +63,22 @@ function LoadPlayer()
   return player
 end
 
-function AtEdge(player, map)
+-- When the player goes to the edge of window,
+-- it moves them to the opposite side of window
+-- and changes their current position to next area
+function AtEdge(player, area)
   local window_x_max, window_y_max = love.graphics.getDimensions()
   local window_x_min, window_y_min = 0
-  local relocate_player_x_position = 30
-  local relocate_player_y_position = 30
+  local relocate_x_position, relocate_y_position = 30
 
-  if player.x.pos > window_x_max then
-    map.bg_x = map.bg_x - window_x_max
-    player.x.pos = relocate_player_x_position
-    map = LoadArea("plains6")
+  if player:GetX() > window_x_max then
+    player.x.pos = 30
+    player:SetArea("plains6")
+    print("current area: ", player.current_area)
     
-    
-  elseif player.x.pos < window_x_min then
-    map.bg_x = map.bg_x + window_x_max
-    player.x.pos = window_x_max - relocate_player_x_position
+  elseif player:GetX() < window_x_min then
+    player.y.pos = 770
+    player:SetArea("plains5")
+    print("current area: ", player.current_area)
   end
 end

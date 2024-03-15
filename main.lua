@@ -4,11 +4,10 @@ require "misc-functions"
 require "draw"
 require "movement"
 
-CONST_BEGIN_AREA = "plains5"
-
 function love.load()
-  area = LoadArea(CONST_BEGIN_AREA)
   player = LoadPlayer()
+  area = LoadArea(player.current_area)
+  previous_area = "plains5"
   map_array = {
     {place = "plains1"}, {place = "plains2"}, {place = "plains3"},
     {place = "plains4"}, {place = "plains5"}, {place = "plains6"},
@@ -24,6 +23,8 @@ function love.update(dt)
   player.TryCollectAllItems(area)
 
   AtEdge(player, area)
+  previous_area = area.area_name
+
 end
 
 function love.draw()

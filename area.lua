@@ -20,7 +20,7 @@
   CreateArea {
     area_name  = "plains6",
     background = "ActionCube_game_800x600.jpg",
-    bg_x       = 800,
+    bg_x       = 0,
     bg_y       = 0,
   
     items = {
