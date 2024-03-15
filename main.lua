@@ -32,8 +32,6 @@ function love.draw()
   Draw.Player(player)
   Draw.Items(area)
   
-  Draw.Player(player)
-  
   Draw.Coordinates(player, 10, 0)
   Draw.Velocity(player, 10, 15)
   Draw.Inventory(player, 10, 30)
