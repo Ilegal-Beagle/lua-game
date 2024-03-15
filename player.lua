@@ -1,10 +1,6 @@
 -- player.lua
 -- stores information for the player
 
-function CreatePlayer(b)
-    player = b
-  end
-
 CreatePlayer{
     x  = { pos = 400, vel = 0, acc = 0},
     y = { pos = 400, vel = 0, acc = 0},

@@ -5,29 +5,45 @@
 
 function LoadArea(specified_area)
   local area = {}
-  
-  -- copies info of chunk from area.lua to area
-  print(specified_name)
+
   function CreateArea(b)
-    print(specified_name, b.area_name)
     if specified_area == b.area_name then
       area = b
-      area.background = b.background
-    else
-      print("Area {} not in file!!", specified_area)
+      area.background = love.graphics.newImage(area.background)
     end
   end
-  
-      -- loads and executes area.lua
-  dofile("area.lua")
-  
 
-  -- make background a love image
-  if area == nil then
-    print("Area not initilized correctly")
-  else
-    area.background = love.graphics.newImage(area.background)
+  function CreateItem(arg_name, arg_image, arg_x, arg_y)
+    if not arg_name and not arg_image and not arg_x and not arg_y then
+      print("arguments are not given")
+    else
+      local item = {
+        name = arg_name,
+        image = arg_image,
+        x = arg_x,
+        y = arg_y,
+        is_collected = false,
+
+        IsTouching = function(self, player)
+          if player.x.pos > self.x and player.x.pos < (self.x + 50) and
+              player.y.pos > self.y and player.y.pos < (self.y + 50) then
+            return true
+          else return false
+          end
+        end,
+
+        IsCollectable = function(self, player)
+          if self:IsTouching(player) and not self.is_collected then
+            return true
+          else return false
+          end
+        end
+      }
+      return item
+    end
   end
+
+  dofile("area.lua")
 
   return area
 end
