@@ -23,8 +23,7 @@ end
 
 function Draw.Player(player)
   local player_sprite = love.graphics.newImage(player.image)
-  print(player.GetX(), player.GetY())
-  love.graphics.draw(player_sprite, player.GetX(), player.GetY(), 0, .5, .5)
+  love.graphics.draw(player_sprite, player:GetX(), player:GetY(), 0, .5, .5)
 end
 
 function Draw.Coordinates(player, x, y)
@@ -32,7 +31,7 @@ function Draw.Coordinates(player, x, y)
 end
 
 function Draw.Velocity(player, x, y)
-  love.graphics.print(tostring(round(player.x.vel)).." "..tostring(round(player.y.vel)), x, y)
+  love.graphics.print(tostring(round(player:GetXVel())).." "..tostring(round(player:GetYVel())), x, y)
 end
 
 function Draw.Inventory(player, x, y)

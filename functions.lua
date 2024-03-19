@@ -25,8 +25,8 @@ function LoadArea(specified_area)
         is_collected = false,
 
         IsTouching = function(self, player)
-          if player.x.pos > self.x and player.x.pos < (self.x + 50) and
-              player.y.pos > self.y and player.y.pos < (self.y + 50) then
+          if player:GetX() > self.x and player:GetX() < (self.x + 50) and
+              player:GetY() > self.y and player:GetY() < (self.y + 50) then
             return true
           else return false
           end
@@ -48,37 +48,45 @@ function LoadArea(specified_area)
   return area
 end
 
-function LoadPlayer(specified_area)
+function LoadPlayer(file)
   local player = {}
 
   function CreatePlayer(b)
     player = b
-    if specified_area then
-      player.current_area = specified_area
-    end
   end
 
-  dofile("player.lua")
+  dofile(file)
 
   return player
 end
 
--- When the player goes to the edge of window,
--- it moves them to the opposite side of window
--- and changes their current position to next area
-function AtEdge(player, area)
-  local window_x_max, window_y_max = love.graphics.getDimensions()
-  local window_x_min, window_y_min = 0
-  local relocate_x_position, relocate_y_position = 30
+function LoadMap()
+  local MAP = {}
+  local placement =
+  {"plains1", "plains2", "plains3",
+   "plains4", "plains5", "plains6",
+   "plains5", "plains6", "plains9"}
 
-  if player:GetX() > window_x_max then
-    player.x.pos = 30
-    player:SetArea("plains6")
-    print("current area: ", player.current_area)
     
-  elseif player:GetX() < window_x_min then
-    player.y.pos = 770
-    player:SetArea("plains5")
-    print("current area: ", player.current_area)
+  -- making a 3*3 grid of nodes, all will have edges to the
+  -- ones above, below, left, and right of node in question
+  local MAP = require("luagraphs.data.graph").create(9)
+
+  MAP:addEdge(0 ,3)
+  MAP:addEdge(0 ,1)
+  MAP:addEdge(1 ,4)
+  MAP:addEdge(1 ,2)
+  MAP:addEdge(2 ,5)
+  MAP:addEdge(3 ,6)
+  MAP:addEdge(3 ,4)
+  MAP:addEdge(4 ,7)
+  MAP:addEdge(4 ,5)
+  MAP:addEdge(5 ,8)
+  MAP:addEdge(6 ,7)
+  MAP:addEdge(7 ,8)
+
+  for index,_ in pairs(MAP.vertexValues) do
+    print(index, _, placement[index])
+    MAP.vertexValues[index] = LoadArea(placement[index])
   end
 end
