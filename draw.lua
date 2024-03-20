@@ -15,9 +15,9 @@ function Draw.Item(item)
 end
 
 -- draws all collectable items in area
-function Draw.Items(area)
-  for i, _ in pairs(area.items) do
-    Draw.Item(area.items[i])
+function Draw.Items(items)
+  for i, _ in pairs(items) do
+    Draw.Item(items[i])
   end
 end
 
@@ -40,4 +40,8 @@ end
 
 function Draw.Area(area)
   love.graphics.draw(area.background, area.bg_x, area.bg_y)
+end
+
+function Draw.currentArea(player, x ,y)
+  love.graphics.print(player.current_area, x, y)
 end

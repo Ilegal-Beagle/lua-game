@@ -20,7 +20,7 @@ function love.update(dt)
 
   MovePlayer(player, dt)
 
-  player:TryCollectAllItems(area)
+  player:TryCollectAllItems(area.items)
   player:ChangeCurrentArea()
   
   previous_area = area.area_name
@@ -36,6 +36,7 @@ function love.draw()
   Draw.Coordinates(player, 10, 0)
   Draw.Velocity(player, 10, 15)
   Draw.Inventory(player, 10, 30)
+  Draw.currentArea(player, 10, 45)
   
 end
 
