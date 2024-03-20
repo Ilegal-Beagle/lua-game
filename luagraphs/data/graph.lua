@@ -170,6 +170,11 @@ function graph:vertexAt(i)
     return self.vertexList:get(i)
 end
 
+-- added by me
+function graph:vertexValueAt(i)
+  return self.vertexValues[i]
+end
+
 function graph:edges()
     local list = require('luagraphs.data.list').create()
 

@@ -65,7 +65,7 @@ function LoadMap()
   local placement =
   {"plains1", "plains2", "plains3",
    "plains4", "plains5", "plains6",
-   "plains5", "plains6", "plains9"}
+   "plains7", "plains8", "plains9"}
 
     
   -- making a 3*3 grid of nodes, all will have edges to the
@@ -84,9 +84,24 @@ function LoadMap()
   MAP:addEdge(5 ,8)
   MAP:addEdge(6 ,7)
   MAP:addEdge(7 ,8)
+  
+for k = 0, MAP:vertexCount() -1 do  -- iterate through all the vertices in g
+    local vertex = MAP:vertexAt(k)  -- current vertex
+    local adj_v = MAP:adj(vertex)   -- adjacency list for vertex v
+    local area = placement[k+1]     -- current area to load into vertex
+    
+    -- put area into repsective graph
+    MAP.vertexValues[k] = LoadArea(area)
+    
+    
+    -- print adjacency list
+    --[[
+    local text = tostring(MAP.vertexValues[k].area_name)..": "
+    for i = 0, adj_v:size()-1 do
+        text = text .. adj_v:get(i):other(vertex) .. ', '
+    end
+    print(text)
+    ]]--
+end
 
-  for index,_ in pairs(MAP.vertexValues) do
-    print(index, _, placement[index])
-    MAP.vertexValues[index] = LoadArea(placement[index])
-  end
 end

@@ -8,7 +8,7 @@ function love.load()
   player = LoadPlayer("player.lua")
   player.current_area = "plains4"
 
-  -- MAP = LoadMap("map.lua")
+  LoadMap("map.lua")
   area = LoadArea(player.current_area)
   previous_area = player.current_area
 

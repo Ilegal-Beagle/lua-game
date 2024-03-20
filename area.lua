@@ -112,3 +112,17 @@ CreateArea {
     CreateItem("Pear", "sprites/pear.png", 400, 400)
   }
 }
+
+CreateArea {
+  area_name  = "plains9",
+  background = "sprites/background.png",
+  bg_x       = 0,
+  bg_y       = 0,
+
+  items = {
+    CreateItem("Apple", "sprites/apple.png", 100, 100),
+    CreateItem("Banana", "sprites/banana.png", 200, 200),
+    CreateItem("Orange", "sprites/orange.png", 300, 300),
+    CreateItem("Pear", "sprites/pear.png", 400, 400)
+  }
+}

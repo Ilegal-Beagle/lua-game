@@ -45,7 +45,7 @@ CreatePlayer{
       elseif self:GetY() < window_y_min then
         return "up"
       else
-        return nil 
+        return nil
       end
     end,
 
@@ -53,19 +53,19 @@ CreatePlayer{
 
       if self:IsAtEdge(area) == "right" then
         self:SetX(30)
-        self:SetArea("plains6")
+        self:SetArea()
     
       elseif self:IsAtEdge(area) == "left" then
         self:SetX(770)
-        self:SetArea("plains5")
+        self:SetArea()
     
       elseif self:IsAtEdge(area) == "top" then
         self:SetY(0)
-        self:SetArea("plains5")
+        self:SetArea()
     
       elseif self:IsAtEdge(area) == "bottom" then
         self:SetY(770)
-        self:SetArea("plains5")
+        self:SetArea()
       end
     end,
 
